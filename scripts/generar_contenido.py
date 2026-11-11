@@ -1,12 +1,15 @@
 """Genera contenido.js e img/ a partir de «Protocolo de evaluación.docx».
 
-El texto se copia tal cual del documento (sin correcciones ni cambios).
+El texto se copia tal cual del documento. Única excepción: las correcciones autorizadas
+de scripts/correcciones.py (las mismas que aplica verificar.py).
 Uso:  python scripts/generar_contenido.py
 Solo usa la biblioteca estándar de Python 3.
 """
 import json, re, shutil, sys, zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from correcciones import aplicar, comprobar
 
 RAIZ = Path(__file__).resolve().parent.parent
 DOCX = RAIZ / 'Protocolo de evaluación.docx'
@@ -32,6 +35,7 @@ def main():
         estilos[s.get(q('styleId'))] = (n.get(q('val')) if n is not None else '').lower()
 
     imagenes = {}  # destino en el docx -> nombre publicado
+    usadas = {}    # correcciones aplicadas
 
     def runs_de(p):
         """Devuelve (runs, imagenes) de un párrafo. run = [texto, negrita, cursiva]."""
@@ -61,6 +65,7 @@ def main():
                 out[-1][0] += texto
             else:
                 out.append([texto, b, i])
+        for run in out: run[0] = aplicar(run[0], usadas)
         return out, imgs
 
     def info_parrafo(p):
@@ -135,6 +140,9 @@ def main():
         else:
             sys.exit('Elemento no soportado en el cuerpo: %s' % el.tag)
 
+    faltan = comprobar(usadas)
+    if faltan: sys.exit('Corrección no encontrada en el documento: %s' % ', '.join(faltan))
+
     # Metadatos del documento
     core = ET.fromstring(z.read('docProps/core.xml'))
     meta = {c.tag.split('}')[1]: (c.text or '') for c in core}
@@ -151,6 +159,7 @@ def main():
         'window.PROTOCOLO = %s;\n' % (DOCX.name, json.dumps(datos, ensure_ascii=False, separators=(',', ':'))),
         encoding='utf-8')
     print('%d secciones, %d imágenes -> %s' % (len(secciones), len(imagenes), SALIDA.name))
+    for antes, n in usadas.items(): print('Corrección autorizada: «%s» (%d)' % (antes, n))
 
 if __name__ == '__main__':
     main()

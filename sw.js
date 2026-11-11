@@ -1,7 +1,7 @@
 // Permite usar el manual sin conexión. Cambiar VERSION al publicar cambios.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const ARCHIVOS = [
-  './', 'index.html', 'contenido.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
+  './', 'index.html', 'contenido.js', 'laminas.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
   'img/image1.png', 'img/image2.png', 'img/image3.png', 'img/image4.png', 'img/image5.png', 'img/image6.png', 'img/image7.png'
 ];
 

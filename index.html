@@ -220,6 +220,43 @@ nav.indice a.info{color:var(--accent)}
 .lupa .diapo img{cursor:zoom-in}
 .lupa.zoom .diapo img{max-width:none;max-height:none;cursor:zoom-out}
 
+/* ---------- láminas para rellenar (MoCA, Trail Making Test, cancelación, Boston 60 ítems) ----------
+   La hoja siempre es blanca, así que la tinta y las marcas usan el mismo color en los dos temas. */
+:root{--tinta:#1537b8;--hs:rgb(21 55 184 / .07);--hs-borde:rgb(21 55 184 / .38)}
+.lam{margin:12px 0 18px}
+.lam-hoja{position:relative;container-type:inline-size;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:pointer}
+.lam-hoja img{display:block;width:100%;height:auto;-webkit-user-drag:none;user-select:none}
+.lam-hoja .capa{position:absolute;inset:0;pointer-events:none}
+.lam-hoja .trazos{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:var(--tinta);stroke-linecap:round;stroke-linejoin:round}
+.hs{position:absolute;pointer-events:auto;margin:0;box-sizing:border-box;border-radius:3px}
+.hs.t{border:0;outline:1px dashed var(--hs-borde);background:var(--hs);color:var(--tinta);font:600 var(--fs) / 1 system-ui,sans-serif;padding:0 .2em;text-align:center}
+.hs.t:focus{outline:2px solid var(--tinta);background:rgb(255 255 255 / .9)}
+.hs.c{display:block;cursor:pointer}
+.hs.c input{appearance:none;-webkit-appearance:none;position:absolute;inset:0;width:100%;height:100%;margin:0;border-radius:3px;
+  outline:1px dashed var(--hs-borde);background:var(--hs);cursor:pointer}
+.hs.c input:focus-visible{outline:2px solid var(--tinta)}
+.hs.c input:checked{background:transparent;outline-color:transparent}
+.hs.c i{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:var(--tinta);font:700 var(--h) / 1 system-ui,sans-serif;font-style:normal}
+.hs.c input:checked + i::after{content:'✓'}
+.lam-acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.lam-ph{border:1px dashed var(--line);border-radius:10px;background:var(--surface-2)}
+
+.rel .barra{flex-wrap:wrap;gap:6px}
+.rel .herr{display:flex;gap:4px;padding:3px;border:1px solid rgb(255 255 255 / .2);border-radius:10px}
+.rel .barra button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--overlay-fg);font:inherit;font-size:14px;cursor:pointer}
+.rel .barra button svg{width:20px;height:20px;flex:none}
+.rel .barra button:hover{background:rgb(255 255 255 / .1)}
+.rel .barra button[aria-pressed="true"]{background:#fff;color:#111}
+.rel .barra button:disabled{opacity:.35;cursor:default}
+.rel .sep{flex:1}
+.rel .lienzo{flex:1;position:relative;overflow:hidden;touch-action:none;user-select:none}
+.rel .lienzo .lam-hoja{position:absolute;left:0;top:0;transform-origin:0 0;border:0;border-radius:2px;cursor:crosshair;box-shadow:0 2px 18px rgb(0 0 0 / .4)}
+.rel.h-mover .lienzo .lam-hoja{cursor:grab}
+.rel.h-goma .lienzo .lam-hoja{cursor:cell}
+.rel .aviso{padding:0 14px 10px;font-size:13px;opacity:.7}
+@media (max-width:700px){ .rel .barra{gap:4px;padding:8px 10px} .rel .barra button span{display:none} .rel .barra button{padding:0 8px} }
+@media (pointer:coarse),(max-width:480px){ .rel .zb{display:none!important} }
+
 /* ---------- cronómetro ---------- */
 .crono{position:fixed;right:16px;bottom:16px;z-index:40;width:280px;background:var(--surface);border:1px solid var(--line);
   border-radius:14px;box-shadow:var(--shadow);padding:12px 14px 14px;display:none}
@@ -270,6 +307,9 @@ nav.indice a.info{color:var(--accent)}
   textarea{resize:none;overflow:hidden;border-color:#bbb!important}
   td textarea{border:0!important}
   .imgbtn{border:0}
+  .lam-acc{display:none!important}
+  .lam-hoja{border:0;border-radius:0}
+  .hs.t,.hs.c input{outline:0!important;background:transparent!important}
   tr,figure{break-inside:avoid}
 }
 </style>
@@ -314,7 +354,7 @@ nav.indice a.info{color:var(--accent)}
   <main>
     <div class="col" id="contenido"></div>
     <footer class="pie">
-      <p><strong>Referencia:</strong> Delgado Ramos Lima, A. (2026). <em>Protocolo de evaluación logopédica. Evaluación de las Alteraciones de Base Anatómica y Neurológica</em>. Grado en Logopedia · Laboratorio practico.</p>
+      <p><strong>Referencia:</strong> Delgado Ramos Lima, A. (2026). <em>Protocolo de evaluación logopédica. Evaluación de las Alteraciones de Base Anatómica y Neurológica</em>. Grado en Logopedia · Laboratorio práctico.</p>
       <p><strong>Autoría:</strong> Alice Delgado Ramos Lima</p>
       <p><a href="#/acerca">Cómo funciona esta app</a></p>
     </footer>
@@ -335,6 +375,24 @@ nav.indice a.info{color:var(--accent)}
     <button class="ib" id="lupaCerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="diapo" id="lupaDiapo"></div>
 </div>
+<div class="ov rel h-lapiz" id="rel" role="dialog" aria-modal="true" aria-label="Rellenar y dibujar sobre la lámina">
+  <div class="barra">
+    <div class="herr" role="group" aria-label="Herramienta">
+      <button data-h="lapiz" aria-pressed="true" title="Lápiz: dibujar o escribir a mano" aria-label="Lápiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg><span>Lápiz</span></button>
+      <button data-h="goma" aria-pressed="false" title="Borrar trazos" aria-label="Borrar trazos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4L13.6 4.4a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L11 21z"/><path d="M22 21H7M5 11l9 9"/></svg><span>Borrar</span></button>
+      <button data-h="mover" aria-pressed="false" title="Mover la lámina" aria-label="Mover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg><span>Mover</span></button>
+    </div>
+    <button id="relDeshacer" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span>Deshacer</span></button>
+    <button id="relLimpiar" title="Borrar todo el dibujo de esta lámina" aria-label="Borrar todo el dibujo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg><span>Borrar dibujo</span></button>
+    <span class="sep"></span>
+    <button class="zb" id="relMenos" title="Reducir" aria-label="Reducir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6"/></svg></button>
+    <button class="zb" id="relMas" title="Ampliar" aria-label="Ampliar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></button>
+    <button id="relAjustar" title="Ver la lámina entera" aria-label="Ver la lámina entera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button id="relCerrar" title="Cerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="aviso" id="relAviso"></div>
+  <div class="lienzo" id="relLienzo"></div>
+</div>
 
 <section class="crono" id="crono" aria-label="Cronómetro">
   <header><span>Cronómetro</span>
@@ -354,10 +412,11 @@ nav.indice a.info{color:var(--accent)}
 </section>
 
 <script src="contenido.js"></script>
+<script src="laminas.js"></script>
 <script>
 (function(){
 'use strict';
-var D = window.PROTOCOLO, SECS = D.secciones;
+var D = window.PROTOCOLO, SECS = D.secciones, LAM = window.LAMINAS || {};
 var $ = function(s, r){ return (r || document).querySelector(s); };
 var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 function esc(s){ return s.replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -457,10 +516,29 @@ function celdaHTML(c, ctx, cab, ancha){
   return '<' + tag + span + '>' + inner + '</' + tag + '>';
 }
 
+/* Lámina que es un ejercicio: la imagen intacta y, encima, una capa de la app (data-ui) con
+   casillas y campos en la posición exacta de sus «[ ]» y «___» (laminas.js) y los trazos dibujados. */
+function laminaHTML(b, lam){
+  var id = b.src.replace(/^img\/|\.\w+$/g, ''), kx = 100 / lam.w, ky = 100 / lam.h, nc = 0, nt = 0;
+  var hs = lam.campos.map(function(c, i){
+    var st = 'left:' + (c[1] * kx).toFixed(3) + '%;top:' + (c[2] * ky).toFixed(3) + '%;width:' + (c[3] * kx).toFixed(3) + '%;height:' + (c[4] * ky).toFixed(3) + '%';
+    var f = 'lam.' + id + '.' + (i + 1);
+    if (c[0] === 'c') return '<label class="hs c" style="' + st + ';--h:' + (c[4] * kx * .8).toFixed(3) + 'cqw"><input type="checkbox" data-f="' + f + '" aria-label="Casilla ' + (++nc) + '"><i></i></label>';
+    return '<input class="hs t" data-f="' + f + '" style="' + st + '" autocomplete="off" aria-label="Campo ' + (++nt) + '">';
+  }).join('');
+  var txtBtn = lam.campos.length ? 'Rellenar y dibujar sobre la lámina' : 'Dibujar sobre la lámina';
+  return '<figure class="lam" data-lam="' + esc(b.src) + '">' +
+    '<div class="lam-hoja" style="aspect-ratio:' + lam.w + '/' + lam.h + ';--fs:' + (2600 / lam.w).toFixed(3) + 'cqw">' +
+    '<img src="' + esc(b.src) + '" alt="' + esc(b.alt || '') + '" draggable="false" loading="lazy" decoding="async">' +
+    '<div class="capa" data-ui><svg class="trazos" viewBox="0 0 ' + lam.w + ' ' + lam.h + '" preserveAspectRatio="none" style="stroke-width:' + (lam.w / 320).toFixed(1) + '" aria-hidden="true"></svg>' + hs + '</div></div>' +
+    '<div class="lam-acc" data-ui><button class="btn" data-rellenar><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>' + txtBtn + '</button></div></figure>';
+}
+
 function bloqueHTML(b, ctx, prevTxt){
   if (b.tipo === 'h2') return '<h2>' + runsHTML(b.runs, ctx) + '</h2>';
   if (b.tipo === 'salto') return '<hr class="salto">';
   if (b.tipo === 'img'){
+    if (LAM[b.src]) return laminaHTML(b, LAM[b.src]);
     return '<figure><button class="imgbtn" data-zoom="' + esc(b.src) + '" aria-label="Ampliar imagen">' +
       '<img src="' + esc(b.src) + '" alt="' + esc(b.alt || '') + '" loading="lazy" decoding="async"></button></figure>';
   }
@@ -577,6 +655,9 @@ html += '<section class="hoja acerca" id="s-acerca" data-sec="acerca" data-ui hi
     '<p>Avanza con «Siguiente», con las flechas del teclado o deslizando el dedo. Para salir, <kbd>Esc</kbd> o el botón de cerrar.</p>') +
   func('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>', 'Láminas',
     '<p>Toca una lámina para ampliarla a pantalla completa y vuelve a tocarla para verla a tamaño real.</p>') +
+  func('<path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>', 'Rellenar y dibujar sobre las láminas',
+    '<p>Las láminas que son ejercicios (MoCA, Trail Making Test, cancelación de letras y registro de 60 ítems del Boston) se rellenan sobre la propia imagen: cada [ ] es una casilla y cada línea ____ un campo, en el mismo sitio que en el papel.</p>' +
+    '<p>«Rellenar y dibujar sobre la lámina» la abre a pantalla completa con un lápiz para unir los círculos, tachar letras o copiar el cubo y el reloj. «Borrar» quita un trazo, «Deshacer» vuelve atrás y «Mover» desplaza la lámina. Amplía con dos dedos o con la rueda del ratón. Lo dibujado se guarda en este dispositivo y sale al imprimir.</p>') +
   func('<circle cx="12" cy="14" r="7"/><path d="M12 14V10.5M10 3h4M18.5 7.5l1.5-1.5"/>', 'Cronómetro',
     '<p>Está en la barra superior. «Libre» cuenta hacia arriba (por ejemplo, para el Trail Making Test); «5 s», «60 s» y «2 min» hacen una cuenta atrás.</p>' +
     '<p>En «60 s», la barra marca los 15, 30 y 45 s, que en las fluencias indican el cambio de columna.</p>') +
@@ -596,7 +677,7 @@ html += '<section class="hoja acerca" id="s-acerca" data-sec="acerca" data-ui hi
   '<li>Para practicar, usa datos ficticios, como los de los casos del protocolo. No introduzcas datos personales de pacientes reales.</li></ul>' +
 
   '<h2>Autoría</h2>' +
-  '<p>Protocolo de Alice Delgado Ramos Lima. Referencia: Delgado Ramos Lima, A. (2026). <em>Protocolo de evaluación logopédica. Evaluación de las Alteraciones de Base Anatómica y Neurológica</em>. Grado en Logopedia · Laboratorio practico.</p>' +
+  '<p>Protocolo de Alice Delgado Ramos Lima. Referencia: Delgado Ramos Lima, A. (2026). <em>Protocolo de evaluación logopédica. Evaluación de las Alteraciones de Base Anatómica y Neurológica</em>. Grado en Logopedia · Laboratorio práctico.</p>' +
 
   '<nav class="pn" aria-label="Hojas"><a href="#/"><small>← Anterior</small><span>Portada</span></a>' +
   '<a class="sig" href="#/' + SECS[1].id + '"><small>Siguiente →</small><span>' + esc(SECS[1].titulo.trim()) + '</span></a></nav>' +
@@ -614,7 +695,7 @@ $$('[data-f]', C).forEach(function(el){
   else el.value = v;
 });
 function autoAlto(el){ if (el.tagName === 'TEXTAREA' && el.closest('td')){ el.style.height = 'auto'; el.style.height = el.scrollHeight + 2 + 'px'; } }
-C.addEventListener('input', function(e){
+document.addEventListener('input', function(e){ // en document: las láminas se rellenan también a pantalla completa
   var el = e.target; if (!el.dataset || !el.dataset.f) return;
   if (el.type === 'checkbox') RESP[el.dataset.f] = el.checked;
   else if (el.type === 'radio') RESP[el.dataset.f] = el.value;
@@ -749,6 +830,8 @@ C.addEventListener('click', function(e){
     P.diapos = diapositivas(sec); P.i = 0; if (!P.diapos.length) return;
     pintarDiapo(); abrirOv($('#pres')); $('#presSig').focus(); return;
   }
+  var lb = e.target.closest('[data-rellenar]') || (!e.target.closest('.hs') && e.target.closest('.lam-hoja'));
+  if (lb){ abrirRel(lb.closest('.lam')); return; }
   var z = e.target.closest('[data-zoom]');
   if (z){
     var img = z.querySelector('img');
@@ -764,11 +847,13 @@ $('#presCerrar').addEventListener('click', function(){ cerrarOv($('#pres')); });
 $('#lupaCerrar').addEventListener('click', function(){ cerrarOv($('#lupa')); });
 document.addEventListener('keydown', function(e){
   var pres = $('#pres').classList.contains('open'), lupa = $('#lupa').classList.contains('open');
+  if (R.fig){ teclaRel(e); return; }
   if (e.key === 'Escape'){ if (pres) cerrarOv($('#pres')); if (lupa) cerrarOv($('#lupa')); $('#masMenu').classList.remove('open'); cerrarNav(); }
   if (pres && (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown')){ e.preventDefault(); mover(1); }
   if (pres && (e.key === 'ArrowLeft' || e.key === 'PageUp')){ e.preventDefault(); mover(-1); }
 });
 document.addEventListener('fullscreenchange', function(){
+  if (!document.fullscreenElement && R.fig) cerrarRel();
   if (!document.fullscreenElement){ ['#pres', '#lupa'].forEach(function(s){ if ($(s).classList.contains('open')){ $(s).classList.remove('open'); document.body.style.overflow = ''; } }); }
 });
 var tx0 = null;
@@ -777,6 +862,176 @@ $('#pres').addEventListener('touchend', function(e){
   if (tx0 === null) return; var dx = e.changedTouches[0].clientX - tx0; tx0 = null;
   if (Math.abs(dx) > 50) mover(dx < 0 ? 1 : -1);
 });
+
+/* ---------- láminas: rellenar y dibujar a pantalla completa ----------
+   La misma lámina (imagen + capa) se lleva al visor y vuelve a su sitio al cerrar.
+   Trazos en píxeles de la imagen, guardados en este dispositivo: { "img/imageN.png": [[x,y,x,y…], …] }. */
+var DKEY = 'logoeval.dibujos.v1', DIB = {};
+try { DIB = JSON.parse(lsGet(DKEY)) || {}; } catch (e) { DIB = {}; }
+var tDib;
+function guardarDib(){ clearTimeout(tDib); tDib = setTimeout(function(){ lsSet(DKEY, JSON.stringify(DIB)); }, 300); }
+function trazoD(p){
+  if (p.length < 4) return 'M' + p[0] + ' ' + p[1] + 'l.1 0';
+  var d = 'M' + p[0] + ' ' + p[1];
+  for (var i = 2; i < p.length; i += 2) d += 'L' + p[i] + ' ' + p[i + 1];
+  return d;
+}
+function pintarSvg(svg, src){
+  svg.innerHTML = (DIB[src] || []).map(function(p){ return '<path d="' + trazoD(p) + '"/>'; }).join('');
+}
+function pintarTrazos(fig){ pintarSvg($('.trazos', fig), fig.dataset.lam); }
+$$('.lam', C).forEach(pintarTrazos);
+
+var R = { fig: null, hoja: null, ph: null, lam: null, src: '', s: 1, tx: 0, ty: 0, base: 0, herr: 'lapiz',
+          ptrs: {}, n: 0, trazo: null, path: null, pinch: null, pan: null, goma: false, hist: [] };
+var RL = $('#relLienzo');
+function abrirRel(fig){
+  R.fig = fig; R.src = fig.dataset.lam; R.lam = LAM[R.src]; R.hoja = $('.lam-hoja', fig); R.hist = [];
+  R.ph = document.createElement('div'); R.ph.className = 'lam-ph';
+  R.ph.style.aspectRatio = R.lam.w + '/' + R.lam.h;
+  R.hoja.parentNode.insertBefore(R.ph, R.hoja);
+  RL.appendChild(R.hoja);
+  $('img', R.hoja).loading = 'eager';
+  var tactil = matchMedia('(pointer:coarse)').matches;
+  var hayC = R.lam.campos.some(function(c){ return c[0] === 'c'; }), hayT = R.lam.campos.some(function(c){ return c[0] === 't'; });
+  $('#relAviso').textContent = (hayC && hayT ? 'Toca las casillas y los campos para rellenarlos. ' : hayT ? 'Toca los campos para rellenarlos. ' : '') +
+    (tactil ? 'Amplía con dos dedos.' : 'Amplía con la rueda del ratón.');
+  abrirOv($('#rel')); herramienta('lapiz'); estadoDeshacer();
+  encajar();
+}
+function cerrarRel(){
+  if (!R.fig) return;
+  R.hoja.style.width = ''; R.hoja.style.transform = '';
+  R.ph.parentNode.replaceChild(R.hoja, R.ph);
+  var fig = R.fig; R.fig = null; R.ptrs = {}; R.n = 0; R.trazo = R.path = R.pinch = R.pan = null; R.goma = false;
+  cerrarOv($('#rel'));
+  var btn = $('[data-rellenar]', fig); if (btn) btn.focus({ preventScroll: true });
+}
+function encajar(){
+  if (!R.fig) return;
+  var w = RL.clientWidth, h = RL.clientHeight;
+  R.base = Math.max(120, Math.min(w - 24, (h - 24) * R.lam.w / R.lam.h));
+  R.hoja.style.width = R.base + 'px';
+  R.s = 1; R.tx = (w - R.base) / 2; R.ty = 12; vista();
+}
+function vista(){
+  var w = RL.clientWidth, h = RL.clientHeight, aw = R.base * R.s, ah = aw * R.lam.h / R.lam.w, m = 60;
+  R.tx = aw <= w ? (w - aw) / 2 : Math.min(m, Math.max(w - aw - m, R.tx));
+  R.ty = ah <= h ? Math.max(12, (h - ah) / 2) : Math.min(m, Math.max(h - ah - m, R.ty));
+  R.hoja.style.transform = 'translate(' + R.tx + 'px,' + R.ty + 'px) scale(' + R.s + ')';
+}
+function zoom(f, cx, cy){
+  var s2 = Math.max(1, Math.min(8, R.s * f)); f = s2 / R.s;
+  if (cx === undefined){ cx = RL.clientWidth / 2; cy = RL.clientHeight / 2; }
+  R.tx = cx - (cx - R.tx) * f; R.ty = cy - (cy - R.ty) * f; R.s = s2; vista();
+}
+function herramienta(h){
+  R.herr = h;
+  $$('#rel .herr button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.h === h ? 'true' : 'false'); });
+  $('#rel').className = 'ov rel open h-' + h;
+}
+function estadoDeshacer(){ $('#relDeshacer').disabled = !R.hist.length; $('#relLimpiar').disabled = !(DIB[R.src] || []).length; }
+function cambiarTrazos(nuevos, esDeshacer){
+  if (!esDeshacer) R.hist.push((DIB[R.src] || []).slice());
+  if (nuevos.length) DIB[R.src] = nuevos; else delete DIB[R.src];
+  pintarSvg($('.trazos', R.hoja), R.src);
+  guardarDib(); estadoDeshacer();
+}
+function enImagen(e){
+  var r = R.hoja.getBoundingClientRect();
+  return [Math.round((e.clientX - r.left) / r.width * R.lam.w), Math.round((e.clientY - r.top) / r.height * R.lam.h)];
+}
+function enLienzo(e){ var r = RL.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+function borrarEn(pt){
+  var rad = R.lam.w / 50, r2 = rad * rad, tr = DIB[R.src] || [];
+  var quedan = tr.filter(function(p){
+    for (var i = 0; i < p.length; i += 2){ var dx = p[i] - pt[0], dy = p[i + 1] - pt[1]; if (dx * dx + dy * dy < r2) return false; }
+    return true;
+  });
+  if (quedan.length !== tr.length) cambiarTrazos(quedan);
+}
+function pinchDatos(){
+  var ps = Object.keys(R.ptrs).map(function(k){ return R.ptrs[k]; });
+  return { c: [(ps[0][0] + ps[1][0]) / 2, (ps[0][1] + ps[1][1]) / 2], d: Math.hypot(ps[0][0] - ps[1][0], ps[0][1] - ps[1][1]) || 1 };
+}
+RL.addEventListener('pointerdown', function(e){
+  if (!R.fig) return;
+  var enCampo = !!e.target.closest('.hs');
+  R.ptrs[e.pointerId] = enLienzo(e); R.n++;
+  if (!enCampo){ e.preventDefault(); try { RL.setPointerCapture(e.pointerId); } catch (x) {} }
+  if (R.n === 2){
+    if (R.path){ R.path.remove(); R.path = null; R.trazo = null; }
+    R.pan = null; R.goma = false;
+    var p = pinchDatos(); R.pinch = { c: p.c, d: p.d, s: R.s, tx: R.tx, ty: R.ty }; return;
+  }
+  if (R.n > 1 || enCampo) return;
+  var act = document.activeElement; if (act && act.classList && act.classList.contains('hs')) act.blur();
+  if (e.button === 1 || R.herr === 'mover'){ R.pan = { x: e.clientX, y: e.clientY, tx: R.tx, ty: R.ty }; return; }
+  if (e.button !== 0) return;
+  var pt = enImagen(e);
+  if (R.herr === 'goma'){ R.goma = true; borrarEn(pt); return; }
+  R.trazo = pt.slice();
+  R.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  R.path.setAttribute('d', trazoD(R.trazo)); $('.trazos', R.hoja).appendChild(R.path);
+});
+RL.addEventListener('pointermove', function(e){
+  if (!R.fig || !(e.pointerId in R.ptrs)) return;
+  R.ptrs[e.pointerId] = enLienzo(e);
+  if (R.pinch && R.n >= 2){
+    var p = pinchDatos(), s2 = Math.max(1, Math.min(8, R.pinch.s * p.d / R.pinch.d)), f = s2 / R.pinch.s;
+    R.s = s2; R.tx = p.c[0] - (R.pinch.c[0] - R.pinch.tx) * f; R.ty = p.c[1] - (R.pinch.c[1] - R.pinch.ty) * f; vista(); return;
+  }
+  if (R.pan){ R.tx = R.pan.tx + e.clientX - R.pan.x; R.ty = R.pan.ty + e.clientY - R.pan.y; vista(); return; }
+  if (R.goma){ borrarEn(enImagen(e)); return; }
+  if (!R.trazo) return;
+  var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!evs.length) evs = [e];
+  var umbral = 1.5 / R.s, cambio = false;
+  evs.forEach(function(ev){
+    var pt = enImagen(ev), n = R.trazo.length;
+    if (Math.abs(pt[0] - R.trazo[n - 2]) + Math.abs(pt[1] - R.trazo[n - 1]) >= umbral){ R.trazo.push(pt[0], pt[1]); cambio = true; }
+  });
+  if (cambio) R.path.setAttribute('d', trazoD(R.trazo));
+});
+function finPuntero(e){
+  if (!(e.pointerId in R.ptrs)) return;
+  delete R.ptrs[e.pointerId]; R.n = Math.max(0, R.n - 1);
+  if (R.n < 2) R.pinch = null;
+  if (R.n === 0){
+    R.pan = null; R.goma = false;
+    if (R.trazo){ var t = R.trazo; R.trazo = null; R.path = null; cambiarTrazos((DIB[R.src] || []).concat([t])); }
+  }
+}
+RL.addEventListener('pointerup', finPuntero);
+RL.addEventListener('pointercancel', finPuntero);
+RL.addEventListener('wheel', function(e){
+  if (!R.fig) return; e.preventDefault();
+  var c = enLienzo(e); zoom(Math.exp(-e.deltaY * (e.deltaMode ? 0.05 : 0.0015)), c[0], c[1]);
+}, { passive: false });
+$('#rel .herr').addEventListener('click', function(e){ var b = e.target.closest('[data-h]'); if (b) herramienta(b.dataset.h); });
+function deshacer(){ if (R.hist.length) cambiarTrazos(R.hist.pop(), true); }
+$('#relDeshacer').addEventListener('click', deshacer);
+$('#relLimpiar').addEventListener('click', function(){
+  if ((DIB[R.src] || []).length && confirm('¿Borrar todo lo dibujado en esta lámina? Las casillas y los campos no se borran.')) cambiarTrazos([]);
+});
+$('#relMas').addEventListener('click', function(){ zoom(1.4); });
+$('#relMenos').addEventListener('click', function(){ zoom(1 / 1.4); });
+$('#relAjustar').addEventListener('click', encajar);
+$('#relCerrar').addEventListener('click', cerrarRel);
+window.addEventListener('resize', function(){
+  // el teclado del móvil cambia el alto: no perder la ampliación mientras se escribe en un campo
+  if (!R.fig) return;
+  var act = document.activeElement;
+  if ((act && act.classList && act.classList.contains('hs')) || R.s > 1) vista(); else encajar();
+});
+function teclaRel(e){
+  var campo = e.target.closest && e.target.closest('.hs.t');
+  if (e.key === 'Escape'){ if (campo) e.target.blur(); else cerrarRel(); return; }
+  if (campo) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); deshacer(); }
+  else if (e.key === '+' || e.key === '='){ zoom(1.25); }
+  else if (e.key === '-'){ zoom(1 / 1.25); }
+  else if (e.key === '0'){ encajar(); }
+}
 
 /* ---------- cronómetro ---------- */
 var K = { modo: 0, corre: false, t0: 0, acum: 0, raf: 0 };
@@ -847,7 +1102,7 @@ window.addEventListener('afterprint', function(){ document.body.classList.remove
 $('#borrar').addEventListener('click', function(){
   $('#masMenu').classList.remove('open');
   if (!confirm('¿Borrar todas las respuestas guardadas en este dispositivo? Esta acción no se puede deshacer.')) return;
-  RESP = {}; lsSet(KEY, '{}');
+  RESP = {}; lsSet(KEY, '{}'); DIB = {}; lsSet(DKEY, '{}'); $$('.lam', C).forEach(pintarTrazos);
   $$('[data-f]', C).forEach(function(el){ if (el.type === 'checkbox' || el.type === 'radio') el.checked = false; else el.value = ''; });
 });
 

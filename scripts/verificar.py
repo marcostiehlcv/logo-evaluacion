@@ -5,14 +5,17 @@
    muestra la página (sin los elementos de la interfaz, marcados con data-ui).
 3. Compara los dos textos carácter a carácter. Solo se ignoran los espacios, las líneas «____»
    (que en la app son campos para escribir) y los «□» (que en la app son casillas).
+   Antes, al texto del documento se le aplican las correcciones autorizadas de correcciones.py.
 4. Comprueba que las imágenes publicadas son idénticas a las del documento.
 
 Uso:  python scripts/verificar.py [ruta de msedge.exe o chrome.exe]
 """
-import hashlib, http.server, re, shutil, subprocess, sys, tempfile, threading, zipfile
+import hashlib, http.server, json, re, shutil, subprocess, sys, tempfile, threading, zipfile
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from correcciones import CORRECCIONES, aplicar, comprobar
 
 RAIZ = Path(__file__).resolve().parent.parent
 DOCX = RAIZ / 'Protocolo de evaluación.docx'
@@ -34,14 +37,16 @@ class Lector(HTMLParser):
     VACIOS = {'input', 'br', 'img', 'hr', 'meta', 'link'}
     def __init__(self):
         super().__init__(); self.pila = []; self.dentro = 0; self.texto = []; self.imgs = []
-        self.casillas = 0; self.campos = 0
+        self.casillas = 0; self.campos = 0; self.lam = 0
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == 'div' and a.get('id') == 'contenido' and not self.dentro:
             self.dentro = 1; self.pila = [('div', False)]; return
         if not self.dentro: return
         if tag == 'img' and not any(s for _, s in self.pila): self.imgs.append(a.get('src'))
-        if tag == 'input' and a.get('type') in ('checkbox', 'radio'): self.casillas += 1
+        ui = any(s for _, s in self.pila)
+        if tag == 'input' and ui: self.lam += 1   # casillas y campos sobre las láminas (capa de la app)
+        elif tag == 'input' and a.get('type') in ('checkbox', 'radio'): self.casillas += 1
         if (tag == 'input' and 'fill' in (a.get('class') or '')) or tag == 'textarea': self.campos += 1
         if tag in self.VACIOS: return
         saltar = 'data-ui' in a or tag in ('textarea', 'script', 'style')
@@ -101,8 +106,13 @@ def main():
     lec = Lector(); lec.feed(dom)
     app = ''.join(lec.texto)
 
-    a, b = limpiar(original), limpiar(app)
+    usadas = {}
+    original = aplicar(original, usadas)
     ok = True
+    for antes, despues, quien in CORRECCIONES:
+        print('CORRECCIÓN AUTORIZADA: «%s» -> «%s» (%s): %d vez/veces' % (antes, despues, quien, usadas.get(antes, 0)))
+    if comprobar(usadas): ok = False; print('  Hay correcciones que ya no están en el documento.')
+    a, b = limpiar(original), limpiar(app)
     if a == b:
         print('TEXTO: idéntico (%d caracteres sin espacios ni líneas de respuesta).' % len(a))
     else:
@@ -129,6 +139,17 @@ def main():
         h = hashlib.sha256((RAIZ / src).read_bytes()).hexdigest()
         if h not in hd: ok = False; print('  %s no coincide con ninguna imagen del documento' % src)
     if ok: print('IMÁGENES: idénticas byte a byte.')
+
+    # Láminas para rellenar: las coordenadas de laminas.js deben corresponder a la misma imagen
+    lj = (RAIZ / 'laminas.js').read_text(encoding='utf-8')
+    lam = json.loads(lj[lj.index('{'):lj.rindex('}') + 1])
+    total = 0
+    for src, v in lam.items():
+        h = hashlib.sha256((RAIZ / src).read_bytes()).hexdigest()
+        if h != v['sha256'] or src not in publicadas: ok = False; print('LÁMINAS: %s ha cambiado o no está en la app; revisar laminas.js' % src)
+        total += len(v['campos'])
+    print('LÁMINAS: %d para rellenar o dibujar; campos en laminas.js %d, en la app %d' % (len(lam), total, lec.lam))
+    if total != lec.lam: ok = False
     print('\nRESULTADO: %s' % ('OK' if ok else 'HAY DIFERENCIAS'))
     sys.exit(0 if ok else 1)
 
