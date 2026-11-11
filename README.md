@@ -13,6 +13,7 @@ Autoría: **Alice Delgado Ramos Lima**.
 - Imágenes ampliables (lámina del robo de las galletas, MoCA, Trail Making Test, cancelación…).
 - Cronómetro (libre, 5 s, 60 s con marcas a los 15, 30 y 45 s, 2 min).
 - Tema claro y oscuro; se puede instalar en el móvil y usar sin conexión.
+- Página «Cómo funciona esta app» (`#/acerca`) con el propósito de la app y una guía de uso.
 
 ## Fidelidad al protocolo
 

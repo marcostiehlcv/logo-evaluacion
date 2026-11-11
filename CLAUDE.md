@@ -26,6 +26,7 @@ Manual online interativo do «Protocolo de evaluación logopédica» (Grado en L
 - Índice agrupado pela primeira palavra comum dos títulos (só usa palavras dos próprios títulos).
 - Tudo o que é interface e não vem do protocolo tem `data-ui` (o verificador ignora-o). Texto novo de interface tem de levar `data-ui` ou ficar fora de `#contenido`.
 - Respostas em `localStorage` (`logoeval.respuestas.v1`); tema em `logoeval.tema`.
+- Página «Cómo funciona esta app» (`#/acerca`, secção `#s-acerca` com `data-ui`): propósito, uso de cada ferramenta, dados e autoria. Ligada no índice, na capa e no rodapé. É texto da app, não do protocolo: **quando se acrescenta ou muda uma ferramenta, atualizar esta página**.
 
 ## Testar
 `python -m http.server 8000` e abrir `http://localhost:8000`. Testar em telemóvel (≈390 px) e computador (≈1280 e 1920 px), temas claro e escuro. O Edge sem interface não desce abaixo de ~492 px: para 390 px usar um iframe com essa largura.
