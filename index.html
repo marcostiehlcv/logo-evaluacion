@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="es-ES">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Protocolo de evaluación logopédica</title>
+<meta name="description" content="Protocolo de evaluación logopédica · Evaluación de las Alteraciones de Base Anatómica y Neurológica · Grado en Logopedia.">
+<meta name="author" content="Alice Delgado Ramos Lima">
+<meta name="theme-color" content="#1f6f78">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --bg:#f5f6f3; --surface:#ffffff; --surface-2:#f0f3f1; --fg:#1c2a2e; --muted:#5a6a6e; --line:#dbe2df;
+  --accent:#1f6f78; --accent-fg:#ffffff; --accent-soft:#e2efee; --mark:#fff0b3; --mark-fg:#1c2a2e;
+  --ev:#2f5597; --ev-soft:#e6ecf7; --pa:#9a5a12; --pa-soft:#f8ecdc; --do:#6a4a9c; --do-soft:#efe8f8;
+  --field:#fbfcfb; --field-line:#9fb0ad; --shadow:0 1px 2px rgb(0 0 0 / .05), 0 4px 16px rgb(0 0 0 / .06);
+  --overlay:#0e1416; --overlay-fg:#f3f6f5;
+  --radius:10px; --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1517; --surface:#162024; --surface-2:#1b272b; --fg:#e4ebea; --muted:#9aaaad; --line:#293a3f;
+    --accent:#5db4bc; --accent-fg:#0b1214; --accent-soft:#1d3336; --mark:#6b5a12; --mark-fg:#fff8dc;
+    --ev:#8fb0ec; --ev-soft:#1d2a40; --pa:#e7b06a; --pa-soft:#33281a; --do:#c3a8ee; --do-soft:#2a2238;
+    --field:#121b1e; --field-line:#4d6267; --shadow:0 1px 2px rgb(0 0 0 / .3), 0 4px 16px rgb(0 0 0 / .25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1517; --surface:#162024; --surface-2:#1b272b; --fg:#e4ebea; --muted:#9aaaad; --line:#293a3f;
+  --accent:#5db4bc; --accent-fg:#0b1214; --accent-soft:#1d3336; --mark:#6b5a12; --mark-fg:#fff8dc;
+  --ev:#8fb0ec; --ev-soft:#1d2a40; --pa:#e7b06a; --pa-soft:#33281a; --do:#c3a8ee; --do-soft:#2a2238;
+  --field:#121b1e; --field-line:#4d6267; --shadow:0 1px 2px rgb(0 0 0 / .3), 0 4px 16px rgb(0 0 0 / .25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- barra superior ---------- */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;height:56px;padding:0 12px;
+  background:var(--surface);border-bottom:1px solid var(--line)}
+.top .marca{flex:1;min-width:0;font-weight:650;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--fg);text-decoration:none}
+.ib{display:inline-grid;place-items:center;width:40px;height:40px;border:0;border-radius:8px;background:transparent;color:var(--fg)}
+.ib:hover{background:var(--surface-2)}
+.ib svg{width:22px;height:22px}
+.ib[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+#menuBtn{display:none}
+.menu{position:relative}
+.menu .pop{position:absolute;right:0;top:46px;min-width:220px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:6px;display:none}
+.menu.open .pop{display:block}
+.pop button{display:block;width:100%;text-align:left;padding:9px 12px;border:0;background:none;border-radius:6px}
+.pop button:hover{background:var(--surface-2)}
+.pop hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.pop .peligro{color:#b3261e}
+:root[data-theme="dark"] .pop .peligro{color:#ff8a80}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pop .peligro{color:#ff8a80}}
+
+/* ---------- estructura ---------- */
+.app{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:calc(100vh - 56px)}
+aside{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;border-right:1px solid var(--line);
+  background:var(--surface);padding:14px 10px 24px}
+main{min-width:0;padding:28px 32px 40px}
+.col{max-width:860px;margin:0 auto}
+
+/* índice */
+.buscar{position:relative;margin:0 4px 12px}
+.buscar input{width:100%;height:40px;padding:0 12px 0 36px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.buscar svg{position:absolute;left:10px;top:10px;width:20px;height:20px;color:var(--muted)}
+nav.indice a{display:flex;gap:8px;align-items:baseline;padding:6px 10px;border-radius:6px;color:var(--fg);
+  text-decoration:none;font-size:14.5px;line-height:1.35}
+nav.indice a:hover{background:var(--surface-2)}
+nav.indice a[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav.indice details{margin:2px 0}
+nav.indice summary{list-style:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-size:14.5px;font-weight:600;
+  display:flex;align-items:center;gap:6px}
+nav.indice summary::-webkit-details-marker{display:none}
+nav.indice summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(-45deg);transition:transform .15s;margin-right:4px;flex:none}
+nav.indice details[open]>summary::before{transform:rotate(45deg)}
+nav.indice summary:hover{background:var(--surface-2)}
+nav.indice summary .n{margin-left:auto;font-weight:400;color:var(--muted);font-size:12.5px}
+nav.indice details a{padding-left:28px}
+.pdot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--pa);transform:translateY(-1px)}
+.leyenda{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);margin:14px 10px 0}
+.resultados a{display:block;padding:8px 10px;border-radius:6px;color:var(--fg);text-decoration:none;font-size:14px}
+.resultados a:hover{background:var(--surface-2)}
+.resultados b{display:block;font-size:14px}
+.resultados span{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+.resultados mark{background:var(--mark);color:var(--mark-fg);border-radius:2px}
+.resultados .vacio{padding:8px 10px;color:var(--muted);font-size:14px}
+.guardado{font-size:12.5px;color:var(--muted);margin:16px 10px 0;line-height:1.4}
+
+/* ---------- hojas ---------- */
+.hoja{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:32px 36px 28px}
+.hoja[hidden]{display:none}
+.hoja>h1{font-size:26px;line-height:1.25;margin:0 0 18px;letter-spacing:-.01em}
+.hoja h2{font-size:19px;margin:28px 0 10px;color:var(--accent)}
+.hoja p{margin:0 0 12px}
+.hoja p.centrado{text-align:center}
+.hoja strong{font-weight:650}
+.acciones{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);color:var(--fg);font-weight:550;text-decoration:none}
+.btn:hover{background:var(--surface-2)}
+.btn svg{width:18px;height:18px}
+.btn.prim{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.prim:hover{filter:brightness(1.07)}
+.badge{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.03em;padding:1px 8px;border-radius:999px;margin-right:2px}
+.badge.ev{background:var(--ev-soft);color:var(--ev)}
+.badge.pa{background:var(--pa-soft);color:var(--pa)}
+.badge.do{background:var(--do-soft);color:var(--do)}
+hr.salto{border:0;border-top:1px dashed var(--line);margin:24px 0}
+
+/* campos */
+.fill{display:inline-block;vertical-align:baseline;width:calc(var(--n) * .42em + 2.5em);max-width:100%;min-width:3.5em;height:1.7em;
+  padding:0 6px;border:0;border-bottom:1.5px solid var(--field-line);background:var(--field);border-radius:4px 4px 0 0}
+.fill:focus{outline:none;border-bottom-color:var(--accent);background:var(--accent-soft)}
+textarea.area,td textarea{display:block;width:100%;min-height:3.2em;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--field);resize:vertical;line-height:1.5;margin:4px 0 14px}
+td textarea{min-height:2.4em;margin:0;padding:6px 8px;border-color:transparent;background:transparent;resize:none}
+td textarea:hover{border-color:var(--line)}
+textarea:focus{outline:none;border-color:var(--accent)!important;background:var(--accent-soft)}
+td .fill{min-width:4em;width:calc(min(var(--n), 24) * .42em + 2.5em)}
+.chk{display:inline-block;max-width:100%;cursor:pointer;border-radius:4px;padding:1px 0}
+.chk:hover{background:var(--surface-2)}
+input[type=checkbox],input[type=radio]{width:17px;height:17px;margin:0 3px 0 0;vertical-align:-3px;accent-color:var(--accent);cursor:pointer}
+.radios{display:flex;flex-wrap:nowrap;gap:4px 10px}
+.radios label{cursor:pointer;white-space:nowrap}
+
+/* tablas */
+.tw{overflow-x:auto;margin:8px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:650;white-space:nowrap}
+td+td,th+th{border-left:1px solid var(--line)}
+td:first-child{font-weight:550}
+td .cp{margin:0}
+td .cp+.cp{margin-top:4px}
+table.ancha{font-size:14px}
+table.ancha th,table.ancha td{padding:7px 8px}
+
+/* imágenes */
+figure{margin:12px 0 18px}
+.imgbtn{display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:zoom-in}
+.imgbtn img{display:block;width:100%;height:auto}
+
+/* navegación entre hojas */
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.pn a{display:block;padding:10px 14px;border:1px solid var(--line);border-radius:10px;color:var(--fg);text-decoration:none;min-width:0}
+.pn a:hover{background:var(--surface-2)}
+.pn small{display:block;color:var(--muted);font-size:12.5px}
+.pn span{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn .sig{text-align:right;grid-column:2}
+
+/* portada */
+.portada .tit{font-size:30px;line-height:1.2;margin:8px 0 10px;text-align:center;letter-spacing:-.015em}
+.portada .sub{text-align:center;color:var(--muted);margin:0 0 26px}
+.portada .sub strong{color:var(--fg)}
+.portada h2{text-align:left}
+.empezar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0 6px}
+.grupos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:22px 0 4px}
+.grupos a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--surface)}
+.grupos a:hover{border-color:var(--accent);background:var(--accent-soft)}
+.grupos b{display:block;font-size:15px}
+.grupos small{color:var(--muted)}
+.ayuda{margin-top:24px;padding:14px 16px;background:var(--surface-2);border-radius:10px;font-size:14.5px;color:var(--muted)}
+.ayuda ul{margin:6px 0 0;padding-left:20px}
+
+/* pie */
+footer.pie{max-width:860px;margin:26px auto 0;padding:18px 4px 8px;color:var(--muted);font-size:13.5px;line-height:1.55}
+footer.pie p{margin:0 0 6px}
+footer.pie strong{color:var(--fg);font-weight:600}
+
+mark.hl{background:var(--mark);color:var(--mark-fg);border-radius:2px}
+
+/* ---------- presentación y lupa ---------- */
+.ov{position:fixed;inset:0;z-index:60;background:var(--overlay);color:var(--overlay-fg);display:none;flex-direction:column}
+.ov.open{display:flex}
+.ov .barra{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.ov .barra .ib{color:var(--overlay-fg)}
+.ov .barra .ib:hover{background:rgb(255 255 255 / .1)}
+.ov .cont{flex:1;font-size:15px;opacity:.75}
+.diapo{flex:1;display:grid;place-items:center;padding:20px 6vw;overflow:auto;text-align:center}
+.diapo .t{font-size:clamp(28px,5.2vw,64px);line-height:1.3;max-width:1100px;font-weight:500}
+.diapo .t.largo{font-size:clamp(20px,2.8vw,34px);text-align:left;font-weight:400}
+.diapo .t p{margin:0 0 .5em}
+.diapo img{max-width:100%;max-height:calc(100vh - 150px);background:#fff;border-radius:6px}
+.ov .pie-ov{display:flex;justify-content:center;gap:12px;padding:12px 14px 18px}
+.ov .pie-ov .btn{background:transparent;color:var(--overlay-fg);border-color:rgb(255 255 255 / .25)}
+.ov .pie-ov .btn:hover{background:rgb(255 255 255 / .1)}
+.lupa .diapo{place-items:start center}
+.lupa .diapo img{cursor:zoom-in}
+.lupa.zoom .diapo img{max-width:none;max-height:none;cursor:zoom-out}
+
+/* ---------- cronómetro ---------- */
+.crono{position:fixed;right:16px;bottom:16px;z-index:40;width:280px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);padding:12px 14px 14px;display:none}
+.crono.open{display:block}
+.crono header{display:flex;align-items:center;justify-content:space-between;font-weight:650;font-size:14px}
+.crono .modos{display:flex;gap:6px;margin:8px 0 6px}
+.crono .modos button{flex:1;padding:6px 0;border:1px solid var(--line);background:var(--surface);border-radius:7px;font-size:13.5px}
+.crono .modos button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:650}
+.crono .reloj{font-size:44px;font-weight:650;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:.01em;margin:4px 0}
+.crono .reloj.fin{color:#b3261e}
+.crono .barra-t{position:relative;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:2px 0 10px}
+.crono .barra-t i{position:absolute;inset:0 auto 0 0;background:var(--accent);width:0}
+.crono .barra-t b{position:absolute;top:0;bottom:0;width:2px;background:var(--surface)}
+.crono .ctl{display:flex;gap:8px}
+.crono .ctl .btn{flex:1;justify-content:center}
+
+/* ---------- computador / móvil ---------- */
+@media (min-width:1500px){ .app{grid-template-columns:330px minmax(0,1fr)} .col,footer.pie{max-width:920px} }
+@media (max-width:959px){
+  #menuBtn{display:inline-grid}
+  .app{display:block}
+  aside{position:fixed;z-index:50;top:56px;left:0;bottom:0;height:auto;width:min(86vw,340px);transform:translateX(-102%);
+    transition:transform .2s ease;box-shadow:var(--shadow)}
+  body.nav-open aside{transform:none}
+  .velo{position:fixed;inset:56px 0 0;z-index:45;background:rgb(0 0 0 / .35);display:none}
+  body.nav-open .velo{display:block}
+  main{padding:16px 16px 32px}
+  .hoja{padding:20px 16px 18px;border-radius:12px}
+  .hoja>h1{font-size:22px}
+  .portada .tit{font-size:24px}
+  th{white-space:normal}
+  .radios{flex-wrap:wrap;gap:2px 10px}
+  table{font-size:14.5px}
+  th,td{padding:8px 9px}
+  .crono{left:16px;right:16px;width:auto}
+}
+@media (prefers-reduced-motion:reduce){ aside{transition:none} }
+
+/* ---------- impresión ---------- */
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface-2:#f2f2f2;--fg:#000;--muted:#444;--line:#bbb;--field:#fff;--accent:#000;--accent-soft:#fff}
+  .top,aside,.velo,.acciones,.pn,.crono,.ov,.empezar,.grupos,.ayuda{display:none!important}
+  .app{display:block} main{padding:0}
+  .hoja{border:0;box-shadow:none;padding:0}
+  body.print-all .hoja[hidden]{display:block!important}
+  body.print-all .hoja{break-before:page}
+  .tw{overflow:visible;border-color:#bbb}
+  textarea{resize:none;overflow:hidden;border-color:#bbb!important}
+  td textarea{border:0!important}
+  .imgbtn{border:0}
+  tr,figure{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="ib" id="menuBtn" aria-label="Índice" aria-expanded="false" aria-controls="lateral">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="marca" href="#/">Protocolo de evaluación logopédica</a>
+  <button class="ib" id="cronoBtn" aria-label="Cronómetro" title="Cronómetro" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="14" r="7"/><path d="M12 14V10.5M10 3h4M18.5 7.5l1.5-1.5"/></svg>
+  </button>
+  <button class="ib" id="temaBtn" aria-label="Cambiar tema claro u oscuro" title="Tema claro u oscuro">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <div class="menu" id="masMenu">
+    <button class="ib" id="masBtn" aria-label="Más opciones" title="Más opciones" aria-haspopup="true" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+    </button>
+    <div class="pop" role="menu">
+      <button role="menuitem" id="impHoja">Imprimir esta hoja</button>
+      <button role="menuitem" id="impTodo">Imprimir todo el protocolo</button>
+      <hr>
+      <button role="menuitem" class="peligro" id="borrar">Borrar mis respuestas</button>
+    </div>
+  </div>
+</header>
+<div class="velo" id="velo"></div>
+<div class="app">
+  <aside id="lateral">
+    <div class="buscar" role="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label class="sr" for="q">Buscar en el protocolo</label>
+      <input id="q" type="search" placeholder="Buscar en el protocolo" autocomplete="off">
+    </div>
+    <div class="resultados" id="resultados" hidden></div>
+    <nav class="indice" id="indice" aria-label="Índice"></nav>
+    <p class="leyenda"><span class="pdot"></span> Página del participante</p>
+    <p class="guardado">Las casillas y los campos que rellenes se guardan solo en este dispositivo.</p>
+  </aside>
+  <main>
+    <div class="col" id="contenido"></div>
+    <footer class="pie">
+      <p><strong>Referencia:</strong> Delgado Ramos Lima, A. (2026). <em>Protocolo de evaluación logopédica. Evaluación de las Alteraciones de Base Anatómica y Neurológica</em>. Grado en Logopedia · Laboratorio practico.</p>
+      <p><strong>Autoría:</strong> Alice Delgado Ramos Lima</p>
+    </footer>
+  </main>
+</div>
+
+<div class="ov" id="pres" role="dialog" aria-modal="true" aria-label="Presentación al participante">
+  <div class="barra"><span class="cont" id="presCont"></span>
+    <button class="ib" id="presCerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="diapo" id="presDiapo"></div>
+  <div class="pie-ov">
+    <button class="btn" id="presAnt">← Anterior</button>
+    <button class="btn" id="presSig">Siguiente →</button>
+  </div>
+</div>
+<div class="ov lupa" id="lupa" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+  <div class="barra"><span class="cont">Toca la imagen para ver a tamaño real</span>
+    <button class="ib" id="lupaCerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="diapo" id="lupaDiapo"></div>
+</div>
+
+<section class="crono" id="crono" aria-label="Cronómetro">
+  <header><span>Cronómetro</span>
+    <button class="ib" id="cronoCerrar" aria-label="Cerrar cronómetro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></header>
+  <div class="modos" id="modos">
+    <button data-m="0" aria-pressed="true">Libre</button>
+    <button data-m="5">5 s</button>
+    <button data-m="60">60 s</button>
+    <button data-m="120">2 min</button>
+  </div>
+  <div class="reloj" id="reloj" aria-live="off">0:00.0</div>
+  <div class="barra-t" id="barraT"><i></i></div>
+  <div class="ctl">
+    <button class="btn prim" id="cronoGo">Iniciar</button>
+    <button class="btn" id="cronoReset">Reiniciar</button>
+  </div>
+</section>
+
+<script src="contenido.js"></script>
+<script>
+(function(){
+'use strict';
+var D = window.PROTOCOLO, SECS = D.secciones;
+var $ = function(s, r){ return (r || document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(s){ return s.replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function norm(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+function txt(runs){ return runs.map(function(r){ return r[0]; }).join(''); }
+function wrap(h, b, i){ if (b) h = '<strong>' + h + '</strong>'; if (i) h = '<em>' + h + '</em>'; return h; }
+
+/* ---------- almacenamiento ---------- */
+var KEY = 'logoeval.respuestas.v1', RESP = {};
+function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
+try { RESP = JSON.parse(lsGet(KEY)) || {}; } catch (e) { RESP = {}; }
+var tGuardar;
+function guardar(){ clearTimeout(tGuardar); tGuardar = setTimeout(function(){ lsSet(KEY, JSON.stringify(RESP)); }, 250); }
+
+/* ---------- etiquetas del propio texto ---------- */
+var BADGES = [[/^PÁGINA DEL EVALUADOR\./, 'ev'], [/^PÁGINA DEL PARTICIPANTE\./, 'pa'],
+              [/^MATERIAL DE ELABORACIÓN DOCENTE\./, 'do'], [/^MATERIAL DOCENTE, NO BETA\./, 'do']];
+function esParticipante(sec){
+  var p = sec.bloques.filter(function(b){ return b.tipo === 'p'; })[0];
+  return !!p && /^PÁGINA DEL PARTICIPANTE\./.test(txt(p.runs));
+}
+
+/* ---------- texto a HTML interactivo ----------
+   «□» se convierte en casilla y cada «____» en un campo. El resto del texto se muestra tal cual. */
+function Ctx(sid){ var n = 0; return { id: function(){ return sid + '.' + (++n); } }; }
+
+function runsHTML(runs, ctx){
+  var out = '', prev = '';
+  runs.forEach(function(r, ri){
+    var toks = r[0].split(/(_{3,}|□|\n)/), h = '', open = false;
+    function cerrar(){ if (open){ h += '</span></label>'; open = false; } }
+    toks.forEach(function(tok, k){
+      if (!tok) return;
+      if (tok === '□'){
+        cerrar();
+        var id = ctx.id(), sig = toks[k + 1];
+        if (sig === undefined || sig === '' || /^\s*$/.test(sig) || /^\s{2,}/.test(sig)){
+          // casilla después de su texto («Tono cómodo □»)
+          h += '<input type="checkbox" data-f="' + id + '" aria-label="' + esc(prev.trim().split(/\s{2,}/).pop().slice(-60) || 'Casilla') + '">';
+        } else {
+          h += '<label class="chk"><input type="checkbox" data-f="' + id + '"><span>'; open = true;
+        }
+      } else if (tok[0] === '_'){
+        cerrar();
+        var lab = prev.replace(/_+/g, ' ').trim().split(/\s{2,}/).pop().slice(-60);
+        h += '<input class="fill" data-f="' + ctx.id() + '" style="--n:' + Math.min(tok.length, 40) + '" aria-label="' + esc(lab || 'Respuesta') + '">';
+      } else if (tok === '\n'){
+        cerrar(); h += '<br>';
+      } else if (open){
+        var m = tok.match(/^([\s\S]*?)(\s*)$/);
+        h += esc(m[1]); if (m[2]){ cerrar(); h += esc(m[2]); }
+      } else {
+        h += esc(tok);
+      }
+      prev += tok;
+    });
+    cerrar();
+    out += wrap(h, r[1], r[2]);
+  });
+  return out;
+}
+
+function badgeRuns(runs){
+  // Separa el prefijo «PÁGINA DEL …» del primer fragmento para mostrarlo como etiqueta (mismo texto)
+  if (!runs.length) return { badge: '', runs: runs };
+  var t = runs[0][0];
+  for (var i = 0; i < BADGES.length; i++){
+    var m = t.match(BADGES[i][0]);
+    if (m){
+      var resto = runs.slice(); resto[0] = [t.slice(m[0].length), runs[0][1], runs[0][2]];
+      return { badge: '<span class="badge ' + BADGES[i][1] + '">' + esc(m[0]) + '</span>', runs: resto };
+    }
+  }
+  return { badge: '', runs: runs };
+}
+
+function celdaHTML(c, ctx, cab, ancha){
+  var tag = cab ? 'th' : 'td', span = c.span > 1 ? ' colspan="' + c.span + '"' : '';
+  var plano = c.p.map(txt).join('\n');
+  var inner;
+  if (cab){
+    inner = c.p.map(function(p){ return runsHTML(p, ctx); }).join('<br>');
+  } else if (!plano.trim()){
+    inner = '<textarea rows="1" data-f="' + ctx.id() + '" aria-label="Respuesta"></textarea>';
+  } else if (/^(□\d\s*)+$/.test(plano.trim())){
+    var name = ctx.id();
+    inner = '<div class="radios" role="radiogroup">' + plano.trim().split(/\s+/).map(function(x){
+      var v = x.slice(1);
+      return '<label><input type="radio" name="' + name + '" data-f="' + name + '" value="' + esc(v) + '">' + esc(v) + '</label>';
+    }).join('') + '</div>';
+  } else if (/^\d+\.$/.test(plano.trim())){
+    inner = esc(plano.trim()) + ' <input class="fill" data-f="' + ctx.id() + '" style="--n:10" aria-label="Respuesta ' + esc(plano.trim()) + '">';
+  } else {
+    inner = c.p.map(function(p){ return '<div class="cp">' + runsHTML(p, ctx) + '</div>'; }).join('');
+  }
+  return '<' + tag + span + '>' + inner + '</' + tag + '>';
+}
+
+function bloqueHTML(b, ctx, prevTxt){
+  if (b.tipo === 'h2') return '<h2>' + runsHTML(b.runs, ctx) + '</h2>';
+  if (b.tipo === 'salto') return '<hr class="salto">';
+  if (b.tipo === 'img'){
+    return '<figure><button class="imgbtn" data-zoom="' + esc(b.src) + '" aria-label="Ampliar imagen">' +
+      '<img src="' + esc(b.src) + '" alt="' + esc(b.alt || '') + '" loading="lazy" decoding="async"></button></figure>';
+  }
+  if (b.tipo === 'tabla'){
+    var cols = b.filas[0].reduce(function(n, c){ return n + c.span; }, 0);
+    return '<div class="tw"><table' + (cols > 5 ? ' class="ancha"' : '') + '>' + b.filas.map(function(f, r){
+      return '<tr>' + f.map(function(c){ return celdaHTML(c, ctx, r === 0, cols > 5); }).join('') + '</tr>';
+    }).join('') + '</table></div>';
+  }
+  var t = txt(b.runs);
+  if (!t.replace(/[_\s]/g, '')){
+    // línea o líneas para escribir
+    var filas = Math.max(2, Math.min(10, Math.round(t.replace(/\s/g, '').length / 70) + 1));
+    var lab = (prevTxt || '').trim().slice(0, 120);
+    return '<textarea class="area" rows="' + filas + '" data-f="' + ctx.id() + '" aria-label="' + esc(lab || 'Respuesta') + '"></textarea>';
+  }
+  var br = badgeRuns(b.runs);
+  return '<p' + (b.centrado ? ' class="centrado"' : '') + '>' + br.badge + runsHTML(br.runs, ctx) + '</p>';
+}
+
+/* ---------- índice agrupado (con las mismas palabras de los títulos) ---------- */
+var ITEMS = SECS.slice(1).map(function(s){ return { sec: s, t: s.titulo.trim(), w: s.titulo.trim().split(/\s+/) }; });
+var GRUPOS = [];
+ITEMS.forEach(function(it){
+  var g = GRUPOS[GRUPOS.length - 1];
+  if (g && g.items[0].w[0] === it.w[0]) g.items.push(it); else GRUPOS.push({ items: [it] });
+});
+GRUPOS.forEach(function(g){
+  if (g.items.length < 2){ g.nombre = null; return; }
+  var pref = g.items[0].w.slice();
+  g.items.forEach(function(it){
+    var k = 0; while (k < pref.length && k < it.w.length && it.w[k] === pref[k]) k++;
+    pref = pref.slice(0, k);
+  });
+  // que ningún título quede vacío salvo el que coincide con el grupo
+  g.nombre = pref.join(' ');
+  g.items.forEach(function(it){ it.corto = it.w.slice(pref.length).join(' ') || it.t; });
+});
+
+function linkHTML(it, corto){
+  return '<a href="#/' + it.sec.id + '" data-id="' + it.sec.id + '">' + (esParticipante(it.sec) ? '<span class="pdot" title="Página del participante"></span>' : '') +
+    '<span>' + esc(corto ? it.corto : it.t) + '</span></a>';
+}
+$('#indice').innerHTML = '<a href="#/" data-id="portada"><span>Portada</span></a>' + GRUPOS.map(function(g){
+  if (!g.nombre) return linkHTML(g.items[0], false);
+  return '<details data-g><summary>' + esc(g.nombre) + '<span class="n">' + g.items.length + '</span></summary>' +
+    g.items.map(function(it){ return linkHTML(it, true); }).join('') + '</details>';
+}).join('');
+
+/* ---------- hojas ---------- */
+var html = '';
+SECS.forEach(function(sec, i){
+  var ctx = Ctx(sec.id), cuerpo = '', prevTxt = '';
+  if (i === 0){
+    var b = sec.bloques;
+    cuerpo = '<p class="tit"><strong>' + esc(txt(b[0].runs)) + '</strong></p>' +
+      '<p class="sub">' + runsHTML(b[1].runs, ctx) + '</p>' +
+      '<h2>' + runsHTML(b[2].runs, ctx) + '</h2>' +
+      b.slice(3).map(function(x){ return bloqueHTML(x, ctx); }).join('') +
+      '<div class="empezar" data-ui><a class="btn prim" href="#/' + SECS[1].id + '">Empezar</a></div>' +
+      '<div class="grupos" data-ui>' + GRUPOS.map(function(g){
+        var it = g.items[0];
+        return '<a href="#/' + it.sec.id + '"><b>' + esc(g.nombre || it.t) + '</b>' +
+          (g.nombre ? '<small>' + g.items.length + ' hojas</small>' : '') + '</a>';
+      }).join('') + '</div>' +
+      '<div class="ayuda" data-ui><b>Cómo usar este manual</b><ul>' +
+      '<li>Navega por el índice o busca cualquier término del protocolo.</li>' +
+      '<li>Las casillas y los campos se pueden rellenar; se guardan en este dispositivo y se pueden imprimir.</li>' +
+      '<li>En las páginas del participante, «Presentar» muestra el material a pantalla completa.</li>' +
+      '<li>El cronómetro está en la barra superior.</li></ul></div>';
+    html += '<section class="hoja portada" id="s-portada" data-sec="portada" hidden>' + cuerpo + '</section>';
+    return;
+  }
+  sec.bloques.forEach(function(b){
+    cuerpo += bloqueHTML(b, ctx, prevTxt);
+    prevTxt = b.runs ? txt(b.runs) : '';
+  });
+  var acc = '';
+  if (esParticipante(sec)) acc += '<button class="btn prim" data-pres="' + sec.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Presentar</button>';
+  var ant = SECS[i - 1], sig = SECS[i + 1];
+  var pn = '<nav class="pn" data-ui aria-label="Hojas">' +
+    '<a href="#/' + (i === 1 ? '' : ant.id) + '"><small>← Anterior</small><span>' + esc(ant.titulo ? ant.titulo.trim() : 'Portada') + '</span></a>' +
+    (sig ? '<a class="sig" href="#/' + sig.id + '"><small>Siguiente →</small><span>' + esc(sig.titulo.trim()) + '</span></a>' : '') + '</nav>';
+  html += '<section class="hoja" id="s-' + sec.id + '" data-sec="' + sec.id + '" hidden><h1>' + esc(sec.titulo) + '</h1>' +
+    (acc ? '<div class="acciones" data-ui>' + acc + '</div>' : '') + cuerpo + pn + '</section>';
+});
+var C = $('#contenido');
+C.innerHTML = html;
+
+/* restaurar respuestas */
+$$('[data-f]', C).forEach(function(el){
+  var v = RESP[el.dataset.f];
+  if (v === undefined) return;
+  if (el.type === 'checkbox') el.checked = !!v;
+  else if (el.type === 'radio') el.checked = (el.value === v);
+  else el.value = v;
+});
+function autoAlto(el){ if (el.tagName === 'TEXTAREA' && el.closest('td')){ el.style.height = 'auto'; el.style.height = el.scrollHeight + 2 + 'px'; } }
+C.addEventListener('input', function(e){
+  var el = e.target; if (!el.dataset || !el.dataset.f) return;
+  if (el.type === 'checkbox') RESP[el.dataset.f] = el.checked;
+  else if (el.type === 'radio') RESP[el.dataset.f] = el.value;
+  else RESP[el.dataset.f] = el.value;
+  autoAlto(el); guardar();
+});
+
+/* ---------- navegación ---------- */
+var actual = null;
+function ir(){
+  var id = (location.hash.replace(/^#\/?/, '') || 'portada').split('?')[0];
+  var el = document.getElementById('s-' + id);
+  if (!el){ id = 'portada'; el = $('#s-portada'); }
+  if (actual) actual.hidden = true;
+  el.hidden = false; actual = el;
+  $$('#indice a').forEach(function(a){ if (a.dataset.id === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  $$('#indice details').forEach(function(d){ if (d.querySelector('[aria-current]')) d.open = true; });
+  var sec = SECS.filter(function(s){ return s.id === id; })[0];
+  document.title = (sec && sec.titulo ? sec.titulo.trim() + ' · ' : '') + 'Protocolo de evaluación logopédica';
+  $$('textarea', el).forEach(autoAlto);
+  cerrarNav();
+  limpiarMarcas();
+  if (busqueda) marcar(el, busqueda); else window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', ir);
+
+function cerrarNav(){ document.body.classList.remove('nav-open'); $('#menuBtn').setAttribute('aria-expanded', 'false'); }
+$('#menuBtn').addEventListener('click', function(){
+  var o = document.body.classList.toggle('nav-open'); this.setAttribute('aria-expanded', o ? 'true' : 'false');
+});
+$('#velo').addEventListener('click', cerrarNav);
+
+/* ---------- búsqueda ---------- */
+var INDICE = SECS.map(function(s){
+  var partes = [s.titulo || ''];
+  s.bloques.forEach(function(b){
+    if (b.runs) partes.push(txt(b.runs));
+    if (b.filas) b.filas.forEach(function(f){ f.forEach(function(c){ partes.push(c.p.map(txt).join(' ')); }); });
+  });
+  var plano = partes.map(function(p){ return p.replace(/_{2,}/g, ' ').replace(/\s+/g, ' ').trim(); })
+    .filter(Boolean).join(' • ');
+  return { sec: s, plano: plano, n: norm(plano) };
+});
+var busqueda = '';
+$('#q').addEventListener('input', function(){
+  var v = this.value.trim(), R = $('#resultados');
+  busqueda = v.length >= 2 ? v : '';
+  if (!busqueda){ R.hidden = true; $('#indice').hidden = false; limpiarMarcas(); return; }
+  var nq = norm(busqueda), res = [];
+  INDICE.forEach(function(x){
+    var pos = x.n.indexOf(nq); if (pos < 0) return;
+    var cnt = x.n.split(nq).length - 1;
+    var a = Math.max(0, pos - 40), z = Math.min(x.plano.length, pos + nq.length + 60);
+    var snip = (a ? '…' : '') + esc(x.plano.slice(a, pos)) + '<mark>' + esc(x.plano.slice(pos, pos + nq.length)) + '</mark>' + esc(x.plano.slice(pos + nq.length, z)) + (z < x.plano.length ? '…' : '');
+    res.push('<a href="#/' + (x.sec.id === 'portada' ? '' : x.sec.id) + '"><b>' + esc(x.sec.titulo ? x.sec.titulo.trim() : 'Portada') + ' <small>(' + cnt + ')</small></b><span>' + snip + '</span></a>');
+  });
+  R.innerHTML = res.length ? res.join('') : '<p class="vacio">Sin resultados.</p>';
+  R.hidden = false; $('#indice').hidden = true;
+  if (actual){ limpiarMarcas(); marcar(actual, busqueda, true); }
+});
+$('#resultados').addEventListener('click', function(e){
+  var a = e.target.closest('a'); if (a && a.getAttribute('href') === location.hash){ e.preventDefault(); ir(); }
+});
+function limpiarMarcas(){
+  $$('mark.hl', C).forEach(function(m){ var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize(); });
+}
+function marcar(raiz, q, sinScroll){
+  var nq = norm(q), w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(n){ return n.parentNode.closest('[data-ui],textarea,script') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; }
+  }), nodos = [], n;
+  while ((n = w.nextNode())) nodos.push(n);
+  var primero = null;
+  nodos.forEach(function(nodo){
+    var t = nodo.nodeValue, nt = norm(t), i = nt.indexOf(nq);
+    if (i < 0) return;
+    var frag = document.createDocumentFragment(), last = 0;
+    while (i >= 0){
+      frag.appendChild(document.createTextNode(t.slice(last, i)));
+      var m = document.createElement('mark'); m.className = 'hl'; m.textContent = t.slice(i, i + nq.length);
+      frag.appendChild(m); if (!primero) primero = m;
+      last = i + nq.length; i = nt.indexOf(nq, last);
+    }
+    frag.appendChild(document.createTextNode(t.slice(last)));
+    nodo.parentNode.replaceChild(frag, nodo);
+  });
+  if (primero && !sinScroll) primero.scrollIntoView({ block: 'center' });
+  else if (!sinScroll) window.scrollTo(0, 0);
+}
+
+/* ---------- presentación al participante ---------- */
+var P = { diapos: [], i: 0 };
+function textoPlano(runs){
+  return runs.map(function(r){ return wrap(esc(r[0]).replace(/\n/g, '<br>'), r[1], r[2]); }).join('');
+}
+function diapositivas(sec){
+  var ds = [], primero = true;
+  sec.bloques.forEach(function(b){
+    if (b.tipo === 'img'){ ds.push({ img: b }); return; }
+    if (b.tipo === 'salto' || b.tipo === 'tabla') return;
+    var t = txt(b.runs);
+    if (primero && b.tipo === 'p'){ primero = false; return; } // instrucción para el evaluador
+    if (!t.replace(/[_\s]/g, '')) return;                      // líneas para escribir
+    if (/^□/.test(t) && ds.length && !ds[ds.length - 1].img) ds[ds.length - 1].p.push(b.runs);
+    else ds.push({ p: [b.runs] });
+  });
+  return ds;
+}
+function pintarDiapo(){
+  var d = P.diapos[P.i], h;
+  if (d.img) h = '<img src="' + esc(d.img.src) + '" alt="' + esc(d.img.alt || '') + '">';
+  else {
+    var largo = d.p.map(txt).join(' ').length > 160;
+    h = '<div class="t' + (largo ? ' largo' : '') + '">' + d.p.map(function(r){ return '<p>' + textoPlano(r) + '</p>'; }).join('') + '</div>';
+  }
+  $('#presDiapo').innerHTML = h;
+  $('#presCont').textContent = (P.i + 1) + ' / ' + P.diapos.length;
+  $('#presAnt').disabled = P.i === 0; $('#presSig').disabled = P.i === P.diapos.length - 1;
+}
+function abrirOv(ov){
+  ov.classList.add('open'); document.body.style.overflow = 'hidden';
+  if (ov.requestFullscreen && matchMedia('(pointer:coarse)').matches === false) ov.requestFullscreen().catch(function(){});
+}
+function cerrarOv(ov){
+  ov.classList.remove('open'); document.body.style.overflow = '';
+  if (document.fullscreenElement) document.exitFullscreen().catch(function(){});
+}
+C.addEventListener('click', function(e){
+  var b = e.target.closest('[data-pres]');
+  if (b){
+    var sec = SECS.filter(function(s){ return s.id === b.dataset.pres; })[0];
+    P.diapos = diapositivas(sec); P.i = 0; if (!P.diapos.length) return;
+    pintarDiapo(); abrirOv($('#pres')); $('#presSig').focus(); return;
+  }
+  var z = e.target.closest('[data-zoom]');
+  if (z){
+    var img = z.querySelector('img');
+    $('#lupaDiapo').innerHTML = '<img src="' + esc(z.dataset.zoom) + '" alt="' + esc(img.alt) + '">';
+    $('#lupa').classList.remove('zoom'); abrirOv($('#lupa')); $('#lupaCerrar').focus();
+  }
+});
+$('#lupaDiapo').addEventListener('click', function(e){ if (e.target.tagName === 'IMG') $('#lupa').classList.toggle('zoom'); });
+function mover(d){ var n = P.i + d; if (n >= 0 && n < P.diapos.length){ P.i = n; pintarDiapo(); } }
+$('#presAnt').addEventListener('click', function(){ mover(-1); });
+$('#presSig').addEventListener('click', function(){ mover(1); });
+$('#presCerrar').addEventListener('click', function(){ cerrarOv($('#pres')); });
+$('#lupaCerrar').addEventListener('click', function(){ cerrarOv($('#lupa')); });
+document.addEventListener('keydown', function(e){
+  var pres = $('#pres').classList.contains('open'), lupa = $('#lupa').classList.contains('open');
+  if (e.key === 'Escape'){ if (pres) cerrarOv($('#pres')); if (lupa) cerrarOv($('#lupa')); $('#masMenu').classList.remove('open'); cerrarNav(); }
+  if (pres && (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown')){ e.preventDefault(); mover(1); }
+  if (pres && (e.key === 'ArrowLeft' || e.key === 'PageUp')){ e.preventDefault(); mover(-1); }
+});
+document.addEventListener('fullscreenchange', function(){
+  if (!document.fullscreenElement){ ['#pres', '#lupa'].forEach(function(s){ if ($(s).classList.contains('open')){ $(s).classList.remove('open'); document.body.style.overflow = ''; } }); }
+});
+var tx0 = null;
+$('#pres').addEventListener('touchstart', function(e){ tx0 = e.touches[0].clientX; }, { passive: true });
+$('#pres').addEventListener('touchend', function(e){
+  if (tx0 === null) return; var dx = e.changedTouches[0].clientX - tx0; tx0 = null;
+  if (Math.abs(dx) > 50) mover(dx < 0 ? 1 : -1);
+});
+
+/* ---------- cronómetro ---------- */
+var K = { modo: 0, corre: false, t0: 0, acum: 0, raf: 0 };
+function fmt(ms){
+  var s = Math.max(0, ms) / 1000, m = Math.floor(s / 60), r = s - m * 60;
+  return m + ':' + (r < 10 ? '0' : '') + r.toFixed(1);
+}
+function transcurrido(){ return K.acum + (K.corre ? performance.now() - K.t0 : 0); }
+function pintarCrono(){
+  var e = transcurrido(), tot = K.modo * 1000, reloj = $('#reloj');
+  if (K.modo){
+    var rest = tot - e;
+    if (rest <= 0){ rest = 0; if (K.corre){ K.acum = tot; K.corre = false; $('#cronoGo').textContent = 'Iniciar'; if (navigator.vibrate) navigator.vibrate(300); } }
+    reloj.textContent = fmt(rest); reloj.classList.toggle('fin', rest === 0 && e > 0);
+    $('#barraT i').style.width = Math.min(100, e / tot * 100) + '%';
+  } else {
+    reloj.textContent = fmt(e); reloj.classList.remove('fin');
+  }
+  if (K.corre) K.raf = requestAnimationFrame(pintarCrono);
+}
+function marcasBarra(){
+  var b = $('#barraT'); $$('b', b).forEach(function(x){ x.remove(); });
+  b.style.display = K.modo ? '' : 'none';
+  if (K.modo === 60) [15, 30, 45].forEach(function(s){ var x = document.createElement('b'); x.style.left = (s / 60 * 100) + '%'; b.appendChild(x); });
+}
+function resetCrono(){ cancelAnimationFrame(K.raf); K.corre = false; K.acum = 0; $('#cronoGo').textContent = 'Iniciar'; $('#barraT i').style.width = '0'; pintarCrono(); }
+$('#cronoGo').addEventListener('click', function(){
+  if (K.corre){ K.acum = transcurrido(); K.corre = false; this.textContent = 'Seguir'; cancelAnimationFrame(K.raf); pintarCrono(); return; }
+  if (K.modo && K.acum >= K.modo * 1000) K.acum = 0;
+  K.t0 = performance.now(); K.corre = true; this.textContent = 'Pausar'; pintarCrono();
+});
+$('#cronoReset').addEventListener('click', resetCrono);
+$('#modos').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  $$('button', this).forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+  K.modo = +b.dataset.m; marcasBarra(); resetCrono();
+});
+function toggleCrono(abrir){
+  var o = $('#crono').classList.toggle('open', abrir); $('#cronoBtn').setAttribute('aria-pressed', o ? 'true' : 'false');
+}
+$('#cronoBtn').addEventListener('click', function(){ toggleCrono(!$('#crono').classList.contains('open')); });
+$('#cronoCerrar').addEventListener('click', function(){ toggleCrono(false); });
+marcasBarra();
+
+/* ---------- tema ---------- */
+var TKEY = 'logoeval.tema';
+function aplicarTema(t){ if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
+aplicarTema(lsGet(TKEY));
+$('#temaBtn').addEventListener('click', function(){
+  var oscuro = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+  var t = oscuro ? 'light' : 'dark'; aplicarTema(t); lsSet(TKEY, t);
+});
+
+/* ---------- menú: imprimir y borrar ---------- */
+$('#masBtn').addEventListener('click', function(e){
+  e.stopPropagation(); var o = $('#masMenu').classList.toggle('open'); this.setAttribute('aria-expanded', o ? 'true' : 'false');
+});
+document.addEventListener('click', function(e){ if (!e.target.closest('#masMenu')){ $('#masMenu').classList.remove('open'); $('#masBtn').setAttribute('aria-expanded', 'false'); } });
+function preparaImpresion(){
+  $$('textarea', C).forEach(function(t){ t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; });
+}
+$('#impHoja').addEventListener('click', function(){ $('#masMenu').classList.remove('open'); preparaImpresion(); window.print(); });
+$('#impTodo').addEventListener('click', function(){
+  $('#masMenu').classList.remove('open'); document.body.classList.add('print-all'); preparaImpresion(); window.print();
+});
+window.addEventListener('afterprint', function(){ document.body.classList.remove('print-all'); });
+$('#borrar').addEventListener('click', function(){
+  $('#masMenu').classList.remove('open');
+  if (!confirm('¿Borrar todas las respuestas guardadas en este dispositivo? Esta acción no se puede deshacer.')) return;
+  RESP = {}; lsSet(KEY, '{}');
+  $$('[data-f]', C).forEach(function(el){ if (el.type === 'checkbox' || el.type === 'radio') el.checked = false; else el.value = ''; });
+});
+
+ir();
+
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && location.hostname !== 'localhost'){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# El documento original no se publica (se guarda solo en local)
+*.docx
+~$*
+__pycache__/
+.vercel

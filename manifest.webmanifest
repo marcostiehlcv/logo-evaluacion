@@ -1,0 +1,17 @@
+{
+  "name": "Protocolo de evaluación logopédica",
+  "short_name": "Protocolo logopedia",
+  "description": "Evaluación de las Alteraciones de Base Anatómica y Neurológica · Grado en Logopedia.",
+  "lang": "es-ES",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f3",
+  "theme_color": "#1f6f78",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
