@@ -1,7 +1,8 @@
 """Genera contenido.js e img/ a partir de «Protocolo de evaluación.docx».
 
 El texto se copia tal cual del documento. Única excepción: las correcciones autorizadas
-de scripts/correcciones.py (las mismas que aplica verificar.py).
+de scripts/correcciones.py (las mismas que aplica verificar.py) y las imágenes que se muestran
+en otro sitio (REUBICACIONES, en el mismo archivo).
 Uso:  python scripts/generar_contenido.py
 Solo usa la biblioteca estándar de Python 3.
 """
@@ -9,7 +10,7 @@ import json, re, shutil, sys, zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from correcciones import aplicar, comprobar
+from correcciones import REUBICACIONES, aplicar, comprobar, reubicar
 
 RAIZ = Path(__file__).resolve().parent.parent
 DOCX = RAIZ / 'Protocolo de evaluación.docx'
@@ -142,6 +143,9 @@ def main():
 
     faltan = comprobar(usadas)
     if faltan: sys.exit('Corrección no encontrada en el documento: %s' % ', '.join(faltan))
+    fallos = reubicar(secciones)
+    if fallos: sys.exit('No se pudo reubicar: %s' % ', '.join(fallos))
+    for src, destino, pos, _ in REUBICACIONES: print('Imagen reubicada: %s -> inicio de «%s»' % (src, destino) if pos == 0 else 'Imagen reubicada: %s -> %s' % (src, destino))
 
     # Metadatos del documento
     core = ET.fromstring(z.read('docProps/core.xml'))

@@ -20,7 +20,7 @@ Autoría: **Alice Delgado Ramos Lima**.
 
 El contenido no se escribe a mano: `scripts/generar_contenido.py` lo extrae de `Protocolo de evaluación.docx` y genera `contenido.js` e `img/`.
 `scripts/verificar.py` abre la página en Edge o Chrome sin interfaz y compara, carácter a carácter, el texto que se muestra con el del documento; también comprueba que cada «□» tiene su casilla y que las imágenes son idénticas.
-La única excepción son las correcciones autorizadas de `scripts/correcciones.py` (por ahora, la tilde de «Laboratorio práctico»), que ambos scripts aplican por igual.
+Las únicas excepciones están en `scripts/correcciones.py` y ambos scripts las aplican por igual: la tilde de «Laboratorio práctico» y la hoja del MoCA, que se muestra al inicio de su guía en lugar de al final de la sección anterior.
 
 El `.docx` no se incluye en este repositorio; para regenerar el contenido hay que colocarlo en la raíz del proyecto.
 

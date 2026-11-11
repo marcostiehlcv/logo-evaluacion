@@ -5,7 +5,8 @@
    muestra la página (sin los elementos de la interfaz, marcados con data-ui).
 3. Compara los dos textos carácter a carácter. Solo se ignoran los espacios, las líneas «____»
    (que en la app son campos para escribir) y los «□» (que en la app son casillas).
-   Antes, al texto del documento se le aplican las correcciones autorizadas de correcciones.py.
+   Antes, al texto del documento se le aplican las correcciones autorizadas de correcciones.py
+   (y se comprueba que las imágenes reubicadas están en su nueva sección).
 4. Comprueba que las imágenes publicadas son idénticas a las del documento.
 
 Uso:  python scripts/verificar.py [ruta de msedge.exe o chrome.exe]
@@ -15,7 +16,7 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from correcciones import CORRECCIONES, aplicar, comprobar
+from correcciones import CORRECCIONES, REUBICACIONES, aplicar, comprobar
 
 RAIZ = Path(__file__).resolve().parent.parent
 DOCX = RAIZ / 'Protocolo de evaluación.docx'
@@ -112,6 +113,11 @@ def main():
     for antes, despues, quien in CORRECCIONES:
         print('CORRECCIÓN AUTORIZADA: «%s» -> «%s» (%s): %d vez/veces' % (antes, despues, quien, usadas.get(antes, 0)))
     if comprobar(usadas): ok = False; print('  Hay correcciones que ya no están en el documento.')
+    for src, destino, pos, quien in REUBICACIONES:
+        m = re.search(r'id="s-%s"(.*?)</section>' % re.escape(destino), dom, re.S)
+        bien = bool(m) and ('src="%s"' % src) in m.group(1)
+        print('IMAGEN REUBICADA: %s en «%s» (%s): %s' % (src, destino, quien, 'sí' if bien else 'NO'))
+        if not bien: ok = False
     a, b = limpiar(original), limpiar(app)
     if a == b:
         print('TEXTO: idéntico (%d caracteres sin espacios ni líneas de respuesta).' % len(a))

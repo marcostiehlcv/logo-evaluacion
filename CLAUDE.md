@@ -5,6 +5,7 @@ Manual online interativo do «Protocolo de evaluación logopédica» (Grado en L
 ## Regras (obrigatórias)
 - **Nenhuma informação do protocolo pode ser criada nem alterada.** O texto da app tem de ser exatamente igual ao do `Protocolo de evaluación.docx`, incluindo gralhas aparentes. Se algo parecer errado, avisar o Marco; não corrigir.
 - Única exceção: as correções que o Marco pedir expressamente vão para `scripts/correcciones.py` (texto no docx → texto na app, quem pediu e quando). O gerador e o verificador aplicam-nas da mesma forma e falham se uma deixar de existir no docx. Atual: «Laboratorio practico» → «Laboratorio práctico» (2026-11-11).
+- No mesmo ficheiro, `REUBICACIONES`: imagens que a app mostra noutro sítio, sem mudar texto. Atual: a folha do MoCA (`img/image3.png`), que no docx está no fim de «Apoyo independiente comprensión de palabras y órdenes», aparece no início de «MoCA guía de práctica y revisión de la copia» (pedido do Marco, 2026-11-11). O verificador confirma que está na secção de destino.
 - Todo o texto da app (conteúdo e interface) em **espanhol de Espanha (castellano)**. Responder ao Marco em português de Portugal.
 - O conteúdo nunca se edita à mão: muda-se o `.docx` e corre-se `python scripts/generar_contenido.py`.
 - Depois de qualquer alteração (conteúdo, `index.html` ou gerador), correr `python scripts/verificar.py` e confirmar «RESULTADO: OK».
